@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>XBS Points Board</title>
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <span class="logo"><img src="logo.png" alt="XMUM Buddhist Society logo"></span>
+      <div><b>XMUM Buddhist Society</b><span>Points Board</span></div>
+    </div>
+    <nav class="tabs" aria-label="Views">
+      <button class="tab on" type="button" data-view="board">Board</button>
+      <button class="tab" type="button" data-view="admin">Admin</button>
+    </nav>
+  </header>
+
+  <!-- ===== BOARD (everyone) ===== -->
+  <main id="view-board">
+    <section class="hero">
+      <div>
+        <p class="eyebrow" id="semName"></p>
+        <h1>Points <em>Board</em></h1>
+        <p class="lede" id="lede"></p>
+        <div class="facts">
+          <div><small>Days left</small><strong id="fDays">--</strong></div>
+          <div><small>Points left</small><strong id="fLeft">--</strong></div>
+          <div><small>Next session</small><span class="sm" id="fNext">--</span></div>
+        </div>
+        <div class="bar" aria-hidden="true"><i id="semFill"></i></div>
+        <p class="hint" id="weekTxt"></p>
+      </div>
+      <figure class="verse">
+        <blockquote id="verseTxt" lang="zh"></blockquote>
+        <figcaption id="verseRef"></figcaption>
+      </figure>
+    </section>
+
+    <section class="stats">
+      <div><strong id="sSess">—</strong><small>Sessions held</small></div>
+      <div><strong id="sMet">—</strong><small>Target met</small></div>
+      <div><strong id="sFull">—</strong><small>Full marks</small></div>
+      <div><strong id="sLeft">—</strong><small>Sessions left</small></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div><h2>Members</h2><p class="hint" id="memHint"></p></div>
+        <button class="ghost" id="sortBtn" type="button">Sort by name</button>
+      </div>
+      <div class="members" id="memberGrid"></div>
+    </section>
+
+    <section class="block">
+      <div class="block-head">
+        <div><h2>Attendance</h2><p class="hint">Filled dot = came. Gold dot = camp.</p></div>
+      </div>
+      <div class="scroll" id="attend"></div>
+    </section>
+
+    <section class="block split">
+      <div>
+        <div class="block-head"><div><h2>Full attendance</h2><p class="hint" id="rewHint"></p></div></div>
+        <ul class="names" id="rewBoard"></ul>
+      </div>
+      <div>
+        <div class="block-head"><div><h2>Latest sessions</h2></div></div>
+        <ul class="recent" id="recent"></ul>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== ADMIN (PIN) ===== -->
+  <main id="view-admin" hidden>
+    <section class="gate" id="gate">
+      <p class="eyebrow">President Team</p>
+      <h2>Enter PIN</h2>
+      <form id="gateForm" autocomplete="off">
+        <label class="field"><span>PIN</span><input id="pinIn" type="password" inputmode="numeric" maxlength="8"></label>
+        <button class="btn" type="submit">Open</button>
+      </form>
+      <p class="hint">A light lock for the admin page. The default PIN is 1234. Change it in Settings.</p>
+    </section>
+
+    <div id="adminBody" hidden>
+      <div class="block-head" style="margin-top:48px">
+        <div><h2>Admin</h2><p class="hint">Changes are saved in this browser on this computer.</p></div>
+        <button class="ghost" id="lockBtn" type="button">Lock</button>
+      </div>
+      <nav class="subtabs" aria-label="Admin sections">
+        <button type="button" data-tab="record" aria-selected="true">Record</button>
+        <button type="button" data-tab="sessions" aria-selected="false">Sessions</button>
+        <button type="button" data-tab="members" aria-selected="false">Members</button>
+        <button type="button" data-tab="penalty" aria-selected="false">IG post</button>
+        <button type="button" data-tab="settings" aria-selected="false">Settings</button>
+      </nav>
+
+      <div class="panel" data-panel="record">
+        <div class="types" id="typeBtns"></div>
+        <div class="fields">
+          <label class="field"><span>Date</span><input type="date" id="fDate"></label>
+          <label class="field"><span>Title (optional)</span><input type="text" id="fTitle" maxlength="60" placeholder="e.g. Lesson 3"></label>
+        </div>
+        <div class="picks">
+          <label class="field"><span>Find name</span><input type="search" id="fFind" placeholder="Type a name" autocomplete="off"></label>
+          <div class="tools"><button class="ghost" type="button" id="fAll">Select all</button><button class="ghost" type="button" id="fNone">Clear</button></div>
+        </div>
+        <div class="pick-list" id="pickList"></div>
+        <div class="savebar">
+          <span class="hint" id="fSum"></span>
+          <div class="tools"><button class="ghost" type="button" id="fCancel" hidden>Cancel edit</button><button class="btn" type="button" id="fSave">Save and add points</button></div>
+        </div>
+      </div>
+
+      <div class="panel" data-panel="sessions" hidden>
+        <ul class="recent" id="sessList"></ul>
+      </div>
+
+      <div class="panel" data-panel="members" hidden>
+        <div class="addrow">
+          <label class="field"><span>Add member (full name)</span><input type="text" id="mAdd" maxlength="60" placeholder="e.g. Tan Ai Ling"></label>
+          <button class="btn" type="button" id="mAddBtn">Add</button>
+        </div>
+        <div id="memList"></div>
+      </div>
+
+      <div class="panel" data-panel="penalty" hidden>
+        <p class="hint" id="penAdminHint"></p>
+        <ul class="list" id="penAdmin"></ul>
+        <div class="block-head sub-head"><div><h2>Full attendance</h2><p class="hint">Committee only. President Team is not in the race.</p></div></div>
+        <ul class="names" id="rewAdmin"></ul>
+        <div class="block-head sub-head"><div><h2>Verse bank</h2><p class="hint">Original Chinese text of the Dhammapada (法句经, T210). Check the wording before you post.</p></div></div>
+        <ul class="verses" id="verseBank"></ul>
+      </div>
+
+      <div class="panel" data-panel="settings" hidden>
+        <div class="form-grid">
+          <label class="field"><span>Semester name</span><input id="sName" maxlength="40"></label>
+          <label class="field"><span>Target points</span><input id="sTarget" type="number" min="1" max="200"></label>
+          <label class="field"><span>IG account to tag</span><input id="sHandle" maxlength="40"></label>
+          <label class="field"><span>Start date</span><input id="sStart" type="date"></label>
+          <label class="field"><span>End date</span><input id="sEnd" type="date"></label>
+          <label class="field check"><input id="sPres" type="checkbox"><span>President Team also needs the target</span></label>
+        </div>
+
+        <h3 class="sub">Planned sessions (for full marks)</h3>
+        <div class="form-grid four">
+          <label class="field"><span>Meetings · 1 pt</span><input id="pMeeting" type="number" min="0"></label>
+          <label class="field"><span>Events · 2 pts</span><input id="pEvent" type="number" min="0"></label>
+          <label class="field"><span>Dhamma Classes · 5 pts</span><input id="pClass" type="number" min="0"></label>
+          <label class="field"><span>Camps · 10 pts</span><input id="pCamp" type="number" min="0"></label>
+        </div>
+        <p class="hint" id="planSum"></p>
+
+        <h3 class="sub">Next session</h3>
+        <div class="form-grid">
+          <label class="field"><span>Type</span><select id="nType"></select></label>
+          <label class="field"><span>Date</span><input id="nDate" type="date"></label>
+          <label class="field"><span>Title (optional)</span><input id="nTitle" maxlength="60"></label>
+        </div>
+
+        <h3 class="sub">PIN</h3>
+        <div class="form-grid">
+          <label class="field"><span>New PIN (blank = keep current)</span><input id="sPin" type="password" inputmode="numeric" maxlength="8"></label>
+        </div>
+        <div class="tools" style="margin-top:16px"><button class="btn" type="button" id="setSave">Save settings</button></div>
+
+        <h3 class="sub">Backup and tools</h3>
+        <div class="tools">
+          <button class="btn" type="button" id="exportBtn">Export backup file</button>
+          <button class="ghost" type="button" id="importBtn">Import backup file</button>
+          <input type="file" id="importFile" accept="application/json,.json" hidden>
+          <button class="ghost" type="button" id="cpBackup">Copy backup</button>
+          <button class="ghost" type="button" id="cpReminder">Copy WhatsApp reminder</button>
+          <button class="ghost danger" type="button" id="newSem">Start new semester</button>
+        </div>
+        <p class="hint">Data is saved in this browser on this computer. Export a backup file now and then, and keep it somewhere safe.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetMsg">
+  <div class="sheet-card">
+    <p id="sheetMsg"></p>
+    <div class="tools end">
+      <button class="ghost" type="button" id="sheetNo">Cancel</button>
+      <button class="btn" type="button" id="sheetYes">Yes</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
