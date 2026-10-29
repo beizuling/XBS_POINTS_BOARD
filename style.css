@@ -215,3 +215,8 @@ h1,h2,h3{margin:0;font-family:var(--serif);font-weight:500;line-height:1.05}
 .gate h2{margin:14px 0 26px;font-size:46px}
 .gate form{display:flex;align-items:flex-end;gap:12px;text-align:left}
 .gate form .field{flex:1}
+/* Motto at the foot of the board */
+.sign{padding:56px 0 72px;text-align:center}
+.sign::before{content:"";display:block;width:40px;height:1px;margin:0 auto 28px;background:var(--gold)}
+.sign-zh{margin:0;font-family:var(--cjk);font-size:clamp(20px,2.6vw,26px);font-weight:400;line-height:1.8;letter-spacing:.08em;color:var(--ink)}
+.sign-en{margin:12px 0 0;font-family:var(--serif);font-style:italic;font-size:18px;color:var(--ink-2)}
